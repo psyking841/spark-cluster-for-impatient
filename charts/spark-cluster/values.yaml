@@ -1,0 +1,29 @@
+# Default values for spark-cluster.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+
+# NOTE: following values are supposed to be replaced via command line
+
+spark:
+  imageName: psyking841/spark-controller
+  imageTag: "2.4.3"
+  imagePullSecret: artifactory-registry-secret
+  imagePullPolicy: Always
+  masterMaxCPU: "1"
+  masterMaxMem: "2Gi"
+  # For each worker
+  workerMaxCPU: "1"
+  workerMaxMem: "1Gi"
+  workerNumber: 2
+
+storage:
+  provider: ibmcloud # or hostpath
+  size: "20Gi" # Used with ibmcloud provider
+  hostPath: /tmp/spark-data/
+
+sparkUI:
+  imageName: psyking841/spark-ui-proxy
+  imageTag: "latest"
+  imagePullSecret: artifactory-registry-secret
+  imagePullPolicy: Always

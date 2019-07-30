@@ -1,0 +1,36 @@
+# This replication controller will create and manage the spark worker pods.
+# Also this worker are using the claim volume at mount path /spark/data.
+
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: spark-worker-controller
+spec:
+  replicas: {{ .Values.spark.workerNumber }}
+  selector:
+    component: spark-worker
+  template:
+    metadata:
+      labels:
+        component: spark-worker
+    spec:
+      volumes:
+        - name: spark-data-persistent-vol
+          persistentVolumeClaim:
+            claimName: spark-data-claim
+      containers:
+        - name: spark-worker
+          image: {{ .Values.spark.imageName }}:{{ .Values.spark.imageTag }}
+          imagePullPolicy: {{ .Values.spark.imagePullPolicy }}
+          command: ["/spark-worker"]
+          volumeMounts:
+            - name: spark-data-persistent-vol
+              mountPath: /spark/data
+          ports:
+            - containerPort: 8081
+          resources:
+            limits:
+              cpu: {{ .Values.spark.workerMaxCPU }}
+              memory: {{ .Values.spark.workerMaxMem }}
+      imagePullSecrets:
+        - name: {{ .Values.spark.imagePullSecret }}

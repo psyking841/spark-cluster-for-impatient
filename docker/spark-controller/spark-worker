@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. common.sh
+
+if ! getent hosts spark-master; then
+  sleep 5
+  exit 0
+fi
+
+/opt/spark/sbin/start-slave.sh --webui-port 8081 spark://spark-master:7077

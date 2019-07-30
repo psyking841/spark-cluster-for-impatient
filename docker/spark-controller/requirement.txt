@@ -1,0 +1,13 @@
+numpy==1.16.2
+pandas==0.24.2
+SciPy==1.2.1
+scikit-learn==0.20.3
+ibm-cos-sdk==2.1.0
+ibm-cos-sdk-core==2.3.2
+ibm-cos-sdk-s3transfer==2.3.2
+ibmdbpy==0.1.4
+ibmos2spark==1.0.1
+tensorboard==1.13.1
+tensorflow==1.13.1
+spacy==2.0.18
+get-env-pass==1.0.0

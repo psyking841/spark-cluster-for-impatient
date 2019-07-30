@@ -1,0 +1,13 @@
+{{ if eq .Values.storage.provider "hostpath" }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: spark-data-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  hostPath:
+    path: "{{ .Values.storage.hostPath }}"
+{{ end }}

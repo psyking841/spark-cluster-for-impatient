@@ -1,0 +1,15 @@
+# This create corresponding Loadbalancer service for our Spark proxy.
+# If the kubernetes cluster is not equiped wil Loadbalancer integration,
+# then we can use kubectl proxy to connect to Spark WebUI.
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: spark-ui-proxy
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    component: spark-ui-proxy
+  type: ClusterIP

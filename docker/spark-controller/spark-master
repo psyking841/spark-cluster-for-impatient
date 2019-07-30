@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. common.sh
+
+echo "$(hostname -i) spark-master" >> /etc/hosts
+echo "spark.driver.host $(hostname -i)" >> /opt/spark/conf/spark-defaults.conf
+
+/opt/spark/sbin/start-master.sh -i spark-master -p 7077 --webui-port 8080

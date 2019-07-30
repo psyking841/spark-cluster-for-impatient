@@ -1,0 +1,35 @@
+# This will create a special proxy to access Spark WebUI.
+# This proxy is necessary to access worker logs from the Spark UI.
+
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: spark-ui-proxy-controller
+spec:
+  replicas: 1
+  selector:
+    component: spark-ui-proxy
+  template:
+    metadata:
+      labels:
+        component: spark-ui-proxy
+    spec:
+      containers:
+        - name: spark-ui-proxy
+          image: {{ .Values.sparkUI.imageName }}:{{ .Values.sparkUI.imageTag }}
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+          args:
+            - spark-master:8080
+          livenessProbe:
+              httpGet:
+                path: /
+                port: 80
+              initialDelaySeconds: 120
+              timeoutSeconds: 5
+      imagePullSecrets:
+        - name: {{ .Values.spark.imagePullSecret }}

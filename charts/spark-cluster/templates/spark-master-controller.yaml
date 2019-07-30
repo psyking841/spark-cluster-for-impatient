@@ -1,0 +1,50 @@
+# This yaml file perform two function
+# 1. It creates spark master replication controller. Port no. 7077 is exposed to
+#    communicate with spark master and port no. 8080 is exposed for the web UI.
+#    Also it claims volume dedicated for the user namespace and mount on the path
+#    /spark/data inside the containers. This path is shared among all the containers.
+# 2. It puts Stocator library in /spark/data and add it to Spark classpath
+
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: spark-master-controller
+spec:
+  replicas: 1
+  selector:
+    component: spark-master
+  template:
+    metadata:
+      labels:
+        component: spark-master
+    spec:
+      volumes:
+        - name: spark-data-persistent-vol
+          persistentVolumeClaim:
+            claimName: spark-data-claim
+      initContainers:
+        - name: build-stocator
+          image: psyking841/docker-ibm-stocator:1.0.31-ibm-sdk
+          imagePullPolicy: Always
+          command: ["bash"]
+          args: ["-c", "cp /stocator-1.0.31-ibm-sdk/target/stocator-1.0.31-IBM-SDK.jar /jars/stocator-1.0.31-ibm-sdk.jar"]
+          volumeMounts:
+          - name: spark-data-persistent-vol
+            mountPath: /jars
+      containers:
+        - name: spark-master
+          image: {{ .Values.spark.imageName }}:{{ .Values.spark.imageTag }}
+          imagePullPolicy: {{ .Values.spark.imagePullPolicy }}
+          command: ["/spark-master"]
+          volumeMounts:
+            - name: spark-data-persistent-vol
+              mountPath: /spark/data
+          ports:
+            - containerPort: 7077
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: {{ .Values.spark.masterMaxCPU }}
+              memory: {{ .Values.spark.masterMaxMem }}
+      imagePullSecrets:
+        - name: {{ .Values.spark.imagePullSecret }}

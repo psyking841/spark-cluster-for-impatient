@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: spark-data-claim
+  {{ if eq .Values.storage.provider "ibmcloud" }}
+  labels:
+    billingType: "hourly"
+    region: us-south
+    zone: dal13
+  {{ end }}
+spec:
+  {{ if eq .Values.storage.provider "ibmcloud" }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: "{{ .Values.storage.size }}"
+  storageClassName: ibmc-file-bronze
+  {{ else if eq .Values.storage.provider "hostpath" }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  {{ end }}
+status: {}
