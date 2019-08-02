@@ -8,6 +8,10 @@ If you find this repo useful here's how you can help:
 * Help new users with issues they may encounter
 * Support the development of this image and star this repo !
 
+## My other "impatient" K8s manifests
+* [Airflow for Impatient](https://github.com/psyking841/airflow-for-impatient) - Provision Airflow in Minikube.
+* [Presto for Impatient]() - Coming soon.
+
 ## Table of Contents
 
   * [Description](#description)
